@@ -11,6 +11,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         TextView tv = (TextView) findViewById(R.id.test_github);
-        tv.setText("测试Github提交");
+        tv.setText("测试Github提交第二次");
     }
 }
