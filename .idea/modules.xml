@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PicShowView.iml" filepath="$PROJECT_DIR$/PicShowView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PicShowView.iml" filepath="$PROJECT_DIR$/PicShowView.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pictureshowview/pictureshowview.iml" filepath="$PROJECT_DIR$/pictureshowview/pictureshowview.iml" />
       <module fileurl="file://$PROJECT_DIR$/pictureshowview/pictureshowview.iml" filepath="$PROJECT_DIR$/pictureshowview/pictureshowview.iml" />
     </modules>
   </component>
