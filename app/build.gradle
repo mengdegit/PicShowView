@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
@@ -27,4 +27,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+
+    compile'org.greenrobot:greendao:3.0.1'
+    compile'org.greenrobot:greendao-generator:3.0.0'
+}
+greendao {
+    schemaVersion 1000
+    daoPackage 'com.joker.picshowview.gen'
+    targetGenDir 'src/main/java'
 }

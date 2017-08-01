@@ -1,5 +1,6 @@
 package com.joker.picshowview.view;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.joker.picshowview.APP;
 import com.joker.picshowview.R;
+import com.joker.picshowview.entity.User;
+import com.joker.picshowview.gen.DaoSession;
+import com.joker.picshowview.gen.UserDao;
 import com.joker.picshowview.utils.CountDownUtil;
 
 import java.util.ArrayList;
@@ -22,7 +27,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     public TextView tv;
     List<String> data;
+    List<String> dbData;
     private ListPopupWindow mListPop;
+    public TextView goSql;
+
+    public UserDao userDao;
+
+    int i=3;
 
     Handler mHandler = new Handler(){
         @Override
@@ -39,22 +50,47 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initDao();
         initList();
         tv = (TextView) findViewById(R.id.test_github);
         tv.setText("测试Github提交第二次");
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mListPop.show();
-                startCountDown();
+
+                List<User> users = userDao.loadAll();
+                dbData.clear();
+                for (int i=0;i<users.size();i++){
+                    dbData.add(users.get(i).getId()+"");
+                }
+                mListPop.show();
+//                startCountDown();
 
             }
         });
         showPop();
 
+        goSql = (TextView) findViewById(R.id.goto_sqlat);
+        goSql.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                Intent intent = new Intent(MainActivity.this,SqlActivity.class);
+//                startActivity(intent);
+                User user = new User();
+                user.setId(i);
+                user.setName("小明");
+                userDao.insert(user);
+                i++;
+            }
+        });
 
 
+    }
 
+    private void initDao() {
+        DaoSession daoSession = ((APP)getApplication()).getDaoSession();
+        userDao = daoSession.getUserDao();
     }
 
     private void startCountDown() {
@@ -76,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showPop(){
         mListPop = new ListPopupWindow(this);
-        mListPop.setAdapter(new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,data));
+        mListPop.setAdapter(new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,dbData));
         mListPop.setWidth(500);
         mListPop.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         mListPop.setAnchorView(tv);
@@ -91,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initList() {
+        dbData = new ArrayList<String>();
         data = new ArrayList();
         data.add("门禁机");
         data.add("闸机");
