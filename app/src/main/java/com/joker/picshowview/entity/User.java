@@ -2,17 +2,27 @@ package com.joker.picshowview.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.DaoException;
+import org.greenrobot.greendao.annotation.Unique;
+
+import com.joker.picshowview.gen.DaoSession;
+import com.joker.picshowview.gen.UserDao;
 
 /**
  * Created by aa on 2017/7/31.
  */
 @Entity
 public class User {
-    @Id
-    private long id;
 
+    @Id(autoincrement = true)
+    @Unique
+    private Long id;
+
+    private Long userId;
+    @NotNull
     private String name;
     @Transient
     private int tem;
@@ -22,26 +32,26 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
-    @Generated(hash = 1144922831)
-    public User(long id, String name) {
+    public Long getUserId() {
+        return this.userId;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    @Generated(hash = 672567375)
+    public User(Long id, Long userId, @NotNull String name) {
         this.id = id;
+        this.userId = userId;
         this.name = name;
     }
     @Generated(hash = 586692638)
     public User() {
     }
 
-    public int getTem() {
-        return tem;
-    }
-
-    public void setTem(int tem) {
-        this.tem = tem;
-    }
 }

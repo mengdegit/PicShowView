@@ -78,8 +78,9 @@ public class MainActivity extends AppCompatActivity {
 //                Intent intent = new Intent(MainActivity.this,SqlActivity.class);
 //                startActivity(intent);
                 User user = new User();
-                user.setId(i);
+//                user.setId(i);
                 user.setName("小明");
+
                 userDao.insert(user);
                 i++;
             }

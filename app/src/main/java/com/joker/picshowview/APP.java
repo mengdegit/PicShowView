@@ -21,7 +21,7 @@ public class APP extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        mHelper = new DaoMaster.DevOpenHelper(this,"notes-db", null);
+        mHelper = new DaoMaster.DevOpenHelper(this,"notes-db");
         db = mHelper.getWritableDatabase();
         mDaoMaster = new DaoMaster(db);
         mDaoSession = mDaoMaster.newSession();
