@@ -10,12 +10,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.joker.picshowview.APP;
 import com.joker.picshowview.R;
+import com.joker.picshowview.entity.Student;
 import com.joker.picshowview.entity.User;
 import com.joker.picshowview.gen.DaoSession;
+import com.joker.picshowview.gen.StudentDao;
 import com.joker.picshowview.gen.UserDao;
 import com.joker.picshowview.utils.CountDownUtil;
 
@@ -29,9 +32,10 @@ public class MainActivity extends AppCompatActivity {
     List<String> data;
     List<String> dbData;
     private ListPopupWindow mListPop;
-    public TextView goSql;
-
+    public Button goSql;
+    public Button insertStu;
     public UserDao userDao;
+    public StudentDao studentDao;
 
     int i=3;
 
@@ -58,10 +62,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                List<User> users = userDao.loadAll();
+//                List<User> users = userDao.loadAll();
+//                dbData.clear();
+//                for (int i=0;i<users.size();i++){
+//                    dbData.add(users.get(i).getId()+"");
+//                }
+//                mListPop.show();
+////                startCountDown();
+
+                List<Student> students = studentDao.loadAll();
                 dbData.clear();
-                for (int i=0;i<users.size();i++){
-                    dbData.add(users.get(i).getId()+"");
+                for (int i=0;i<students.size();i++){
+                    dbData.add(students.get(i).getId()+"");
                 }
                 mListPop.show();
 //                startCountDown();
@@ -70,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         });
         showPop();
 
-        goSql = (TextView) findViewById(R.id.goto_sqlat);
+        goSql = (Button) findViewById(R.id.goto_sqlat);
         goSql.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,11 +90,22 @@ public class MainActivity extends AppCompatActivity {
 //                Intent intent = new Intent(MainActivity.this,SqlActivity.class);
 //                startActivity(intent);
                 User user = new User();
-//                user.setId(i);
+//                user.setId(2L);
                 user.setName("小明");
+                user.setUserId(3L);
 
                 userDao.insert(user);
                 i++;
+            }
+        });
+
+        insertStu = (Button) findViewById(R.id.insert_student);
+        insertStu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Student student = new Student();
+                student.setName("小王");
+                studentDao.insert(student);
             }
         });
 
@@ -92,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
     private void initDao() {
         DaoSession daoSession = ((APP)getApplication()).getDaoSession();
         userDao = daoSession.getUserDao();
+        studentDao =daoSession.getStudentDao();
     }
 
     private void startCountDown() {

@@ -5,11 +5,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Generated;
-import org.greenrobot.greendao.DaoException;
 import org.greenrobot.greendao.annotation.Unique;
-
-import com.joker.picshowview.gen.DaoSession;
-import com.joker.picshowview.gen.UserDao;
 
 /**
  * Created by aa on 2017/7/31.
