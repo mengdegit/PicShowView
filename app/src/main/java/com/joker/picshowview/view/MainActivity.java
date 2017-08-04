@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.joker.picshowview.APP;
@@ -21,7 +22,9 @@ import com.joker.picshowview.gen.DaoSession;
 import com.joker.picshowview.gen.StudentDao;
 import com.joker.picshowview.gen.UserDao;
 import com.joker.picshowview.utils.CountDownUtil;
+import com.joker.picshowview.utils.TextUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +37,10 @@ public class MainActivity extends AppCompatActivity {
     private ListPopupWindow mListPop;
     public Button goSql;
     public Button insertStu;
+    public Button saveBtn;
     public UserDao userDao;
     public StudentDao studentDao;
+    public EditText writeText;
 
     int i=3;
 
@@ -106,6 +111,23 @@ public class MainActivity extends AppCompatActivity {
                 Student student = new Student();
                 student.setName("小王");
                 studentDao.insert(student);
+            }
+        });
+        writeText = (EditText) findViewById(R.id.write_et);
+        saveBtn = (Button) findViewById(R.id.write_bt);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = writeText.getText().toString();
+                if (text!=null && !"".equals(text)){
+                    //保存
+//                    TextUtils.mCreatFile(text);
+                    try {
+                        String id = TextUtils.getId();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
