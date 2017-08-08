@@ -1,11 +1,15 @@
 package com.joker.picshowview.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ListPopupWindow;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -14,6 +18,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.joker.picshowview.APP;
 import com.joker.picshowview.R;
 import com.joker.picshowview.entity.Student;
@@ -22,18 +30,22 @@ import com.joker.picshowview.gen.DaoSession;
 import com.joker.picshowview.gen.StudentDao;
 import com.joker.picshowview.gen.UserDao;
 import com.joker.picshowview.utils.CountDownUtil;
+import com.joker.picshowview.utils.MainPresenter;
 import com.joker.picshowview.utils.TextUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity implements MainPresenter.IMainView ,OnItemClickListener{
     public TextView tv;
     List<String> data;
     List<String> dbData;
+    private ArrayList<Integer> localImages = new ArrayList<Integer>();
+    private ArrayList<String> transformerList = new ArrayList<String>();
     private ListPopupWindow mListPop;
     public Button goSql;
     public Button insertStu;
@@ -41,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
     public UserDao userDao;
     public StudentDao studentDao;
     public EditText writeText;
+    public View Banner;
+    public SimpleDraweeView SDV;
+    public ConvenientBanner convenientBanner;
+
+    private MainPresenter mPresenter;
+//    private ArrayAdapter transformerArrayAdapter;
 
     int i=3;
 
@@ -61,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initDao();
         initList();
+        initUI();
+        mPresenter = new MainPresenter(this);
+
+//        Banner = findViewById(R.id.banner);
         tv = (TextView) findViewById(R.id.test_github);
         tv.setText("测试Github提交第二次");
         tv.setOnClickListener(new View.OnClickListener() {
@@ -131,8 +153,76 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //广告层操作
+        bannerWork();
+        //加载图片
+        SDV.setImageURI("192.168.18.55\\Users\\Administrator\\Desktop\\22.jpg");
 
     }
+
+    private void bannerWork() {
+        convenientBanner.setPages(new CBViewHolderCreator<LocalImageHolderView>() {
+            @Override
+            public LocalImageHolderView createHolder() {
+                return new LocalImageHolderView();
+            }
+        },localImages)
+                //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
+                .setPageIndicator(new int[]{R.mipmap.ic_page_indicator, R.mipmap.ic_page_indicator_focused})
+                //设置指示器的方向
+//                .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT)
+//                .setOnPageChangeListener(this)//监听翻页事件
+                .setOnItemClickListener(this);
+        convenientBanner.notifyDataSetChanged();
+    }
+
+    private void initUI() {
+        convenientBanner = (ConvenientBanner) findViewById(R.id.convenientBanner);
+        SDV = (SimpleDraweeView) findViewById(R.id.simpledraweeview);
+        loadTestDatas();
+    }
+
+    private void loadTestDatas() {
+        //本地图片集合
+        for (int position = 0; position < 7; position++)
+            localImages.add(getResId("ic_test_" + position, R.mipmap.class));
+
+        //        //各种翻页效果
+//        transformerList.add(DefaultTransformer.class.getSimpleName());
+//        transformerList.add(AccordionTransformer.class.getSimpleName());
+//        transformerList.add(BackgroundToForegroundTransformer.class.getSimpleName());
+//        transformerList.add(CubeInTransformer.class.getSimpleName());
+//        transformerList.add(CubeOutTransformer.class.getSimpleName());
+//        transformerList.add(DepthPageTransformer.class.getSimpleName());
+//        transformerList.add(FlipHorizontalTransformer.class.getSimpleName());
+//        transformerList.add(FlipVerticalTransformer.class.getSimpleName());
+//        transformerList.add(ForegroundToBackgroundTransformer.class.getSimpleName());
+//        transformerList.add(RotateDownTransformer.class.getSimpleName());
+//        transformerList.add(RotateUpTransformer.class.getSimpleName());
+//        transformerList.add(StackTransformer.class.getSimpleName());
+//        transformerList.add(ZoomInTransformer.class.getSimpleName());
+//        transformerList.add(ZoomOutTranformer.class.getSimpleName());
+
+//        transformerArrayAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 通过文件名获取资源id 例子：getResId("icon", R.drawable.class);
+     *
+     * @param variableName
+     * @param c
+     * @return
+     */
+    public static int getResId(String variableName, Class<?> c) {
+        try {
+            Field idField = c.getDeclaredField(variableName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
 
     private void initDao() {
         DaoSession daoSession = ((APP)getApplication()).getDaoSession();
@@ -183,5 +273,54 @@ public class MainActivity extends AppCompatActivity {
         data.add("人像平台");
         data.add("手持式人脸考勤");
         data.add("网吧项目");
+    }
+
+    @Override
+    public void showTipsView() {
+        Log.i("visibility",convenientBanner.getVisibility()+"之前");
+        convenientBanner.setVisibility(View.VISIBLE);
+        Log.i("visibility",convenientBanner.getVisibility()+"之后");
+//        Banner.setVisibility(View.VISIBLE);
+//        Intent intent = new Intent(MainActivity.this,AdvertisementActivity.class);
+//        startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i("destory","xiaohui");
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        mPresenter.resetTipsTimer();
+        return false;
+    }
+
+    @Override
+    protected void onResume() {
+        mPresenter.startTipsTimer();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        mPresenter.endTipsTimer();
+        super.onPause();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mPresenter.resetTipsTimer();
+
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        if (convenientBanner.getVisibility() == View.VISIBLE){
+            convenientBanner.setVisibility(View.GONE);
+            mPresenter.resetTipsTimer();
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.joker.picshowview;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.joker.picshowview.gen.DaoMaster;
 import com.joker.picshowview.gen.DaoSession;
 
@@ -25,6 +26,7 @@ public class APP extends Application{
         db = mHelper.getWritableDatabase();
         mDaoMaster = new DaoMaster(db);
         mDaoSession = mDaoMaster.newSession();
+        Fresco.initialize(this);
     }
 
     public DaoSession getDaoSession(){
