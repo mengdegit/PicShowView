@@ -1,10 +1,11 @@
 package com.joker.picshowview.view;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ListPopupWindow;
 import android.util.Log;
@@ -17,12 +18,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.joker.picshowview.APP;
+import com.weijuso.hardware.Keypad;
 import com.joker.picshowview.R;
 import com.joker.picshowview.entity.Student;
 import com.joker.picshowview.entity.User;
@@ -33,7 +36,6 @@ import com.joker.picshowview.utils.CountDownUtil;
 import com.joker.picshowview.utils.MainPresenter;
 import com.joker.picshowview.utils.TextUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +43,9 @@ import java.util.List;
 
 
 public class MainActivity extends Activity implements MainPresenter.IMainView ,OnItemClickListener{
+    //继电器
+    public Keypad ledControler;
+
     public TextView tv;
     List<String> data;
     List<String> dbData;
@@ -53,12 +58,20 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
     public UserDao userDao;
     public StudentDao studentDao;
     public EditText writeText;
+    public TextView Longitude;
+    public TextView Latitude;
     public View Banner;
     public SimpleDraweeView SDV;
     public ConvenientBanner convenientBanner;
 
     private MainPresenter mPresenter;
+
+    public LocationManager locationManager;
+    private String locationProvider;
+    public Location location;
 //    private ArrayAdapter transformerArrayAdapter;
+    public Button openControl;
+    public Button closeControl;
 
     int i=3;
 
@@ -73,13 +86,21 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
             }
         }
     };
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //继电器初始化
+//        ledControler = new Keypad();
+
+        initLocation();
         initDao();
         initList();
         initUI();
+        initClick();
         mPresenter = new MainPresenter(this);
 
 //        Banner = findViewById(R.id.banner);
@@ -140,16 +161,8 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text = writeText.getText().toString();
-                if (text!=null && !"".equals(text)){
-                    //保存
-//                    TextUtils.mCreatFile(text);
-                    try {
-                        String id = TextUtils.getId();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                String id = TextUtils.getId();
+                writeText.setText(id);
             }
         });
 
@@ -157,6 +170,58 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         bannerWork();
         //加载图片
         SDV.setImageURI("192.168.18.55\\Users\\Administrator\\Desktop\\22.jpg");
+
+        //位置信息
+        Longitude.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (location!=null){
+                    Longitude.setText(location.getLongitude()+"");
+                }
+            }
+        });
+        Latitude.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (location != null){
+                    Latitude.setText(location.getLatitude()+"");
+                }
+            }
+        });
+
+    }
+
+    private void initClick() {
+        openControl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                ledControler.ledsetting(0,1);
+            }
+        });
+        closeControl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                ledControler.ledsetting(0,0);
+            }
+        });
+    }
+
+    private void initLocation() {
+        //获取地理位置管理器
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        //获取所有可用的位置提供器
+        List<String> providers = locationManager.getProviders(true);
+        if (providers.contains(LocationManager.GPS_PROVIDER)){
+            locationProvider = LocationManager.GPS_PROVIDER;
+        }else if (providers.contains(LocationManager.NETWORK_PROVIDER)){
+            locationProvider = LocationManager.NETWORK_PROVIDER;
+        }else {
+            Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //获取Location
+        location = locationManager.getLastKnownLocation(locationProvider);
 
     }
 
@@ -180,6 +245,13 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         convenientBanner = (ConvenientBanner) findViewById(R.id.convenientBanner);
         SDV = (SimpleDraweeView) findViewById(R.id.simpledraweeview);
         loadTestDatas();
+
+        Longitude = (TextView) findViewById(R.id.longitude);
+        Latitude = (TextView) findViewById(R.id.latitude);
+
+        openControl = (Button) findViewById(R.id.open);
+        closeControl = (Button) findViewById(R.id.close);
+
     }
 
     private void loadTestDatas() {
@@ -285,6 +357,10 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
 //        startActivity(intent);
     }
 
+    public void showLocation(Location location){
+
+    }
+
     @Override
     protected void onDestroy() {
         Log.i("destory","xiaohui");
@@ -294,7 +370,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         mPresenter.resetTipsTimer();
-        return false;
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

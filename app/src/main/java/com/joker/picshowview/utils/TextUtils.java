@@ -35,15 +35,24 @@ public class TextUtils {
         }
     }
 
-    public static String getId() throws IOException {
+    public static String getId() {
         File file = new File(Environment.getExternalStoragePublicDirectory("") + "/xinge/");
         if (!file.exists()) {
-            return null;
+            return "";
         }else {
-            FileReader reader = new FileReader(Environment.getExternalStoragePublicDirectory("")+"/xinge/print.xgo");
-            BufferedReader br = new BufferedReader(reader);
-            String id = br.readLine();
-            return id;
+            FileReader reader = null;
+            try {
+                reader = new FileReader(Environment.getExternalStoragePublicDirectory("")+"/xinge/print.xgo");
+                BufferedReader br = new BufferedReader(reader);
+                String id = br.readLine();
+                return id;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "";
+
         }
     }
 }
