@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.joker.picshowview.utils.CountDownUtil;
 import com.joker.picshowview.utils.MainPresenter;
 import com.joker.picshowview.utils.TextUtils;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -196,6 +198,17 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
             @Override
             public void onClick(View v) {
 //                ledControler.ledsetting(0,1);
+
+                //测试图片删除
+                File file = new File(Environment.getExternalStorageDirectory(),"hpFace.apk");
+                if (file.exists()){
+                    boolean f = file.delete();
+                    if (f){
+                        Log.i("ksd","已删除");
+                    }else {
+                        Log.i("ksd","未删除");
+                    }
+                }
             }
         });
         closeControl.setOnClickListener(new View.OnClickListener() {
