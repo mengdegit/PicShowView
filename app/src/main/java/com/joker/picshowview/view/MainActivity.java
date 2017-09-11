@@ -26,6 +26,7 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.joker.picshowview.APP;
+import com.joker.picshowview.utils.ToastUtils;
 import com.weijuso.hardware.Keypad;
 import com.joker.picshowview.R;
 import com.joker.picshowview.entity.Student;
@@ -198,7 +199,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
             @Override
             public void onClick(View v) {
 //                ledControler.ledsetting(0,1);
-
+                ToastUtils.showToast(MainActivity.this,"打开toast",Toast.LENGTH_LONG);
                 //测试图片删除
                 File file = new File(Environment.getExternalStorageDirectory(),"hpFace.apk");
                 if (file.exists()){
@@ -215,6 +216,8 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
             @Override
             public void onClick(View v) {
 //                ledControler.ledsetting(0,0);
+//                ToastUtils.showToast(MainActivity.this,"关闭toast",Toast.LENGTH_LONG);
+                ToastUtils.cancel();
             }
         });
     }
@@ -228,6 +231,10 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
             locationProvider = LocationManager.GPS_PROVIDER;
         }else if (providers.contains(LocationManager.NETWORK_PROVIDER)){
             locationProvider = LocationManager.NETWORK_PROVIDER;
+
+
+
+
         }else {
             Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
             return;
