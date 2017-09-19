@@ -23,6 +23,7 @@ public class TextUtils {
             if (!file.exists()) {
                 file.mkdir();
             }
+            //第二个参数是决定在源文件内容后面添加内容还是覆盖原文件内容
             FileWriter fw = new FileWriter(Environment.getExternalStoragePublicDirectory("")+"/xinge/print.xgo", false);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(id);// 往已有的文件上添加字符串

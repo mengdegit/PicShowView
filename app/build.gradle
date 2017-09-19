@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -30,8 +30,9 @@ dependencies {
     compile 'org.greenrobot:greendao-generator:3.0.0'
     compile 'com.bigkoo:convenientbanner:2.0.5'
     compile 'com.facebook.fresco:fresco:0.12.0'
-
     testCompile 'junit:junit:4.12'
+
+    compile 'com.github.yilylong:CBDialog:v1.0.3'
 }
 greendao {
     schemaVersion 1000

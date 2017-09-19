@@ -37,6 +37,7 @@ import com.joker.picshowview.gen.UserDao;
 import com.joker.picshowview.utils.CountDownUtil;
 import com.joker.picshowview.utils.MainPresenter;
 import com.joker.picshowview.utils.TextUtils;
+import com.zhl.cbdialog.CBDialogBuilder;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -97,7 +98,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //继电器初始化
-//        ledControler = new Keypad();
+        ledControler = new Keypad();
 
         initLocation();
         initDao();
@@ -217,7 +218,16 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
             public void onClick(View v) {
 //                ledControler.ledsetting(0,0);
 //                ToastUtils.showToast(MainActivity.this,"关闭toast",Toast.LENGTH_LONG);
-                ToastUtils.cancel();
+//                ToastUtils.cancel();
+                new CBDialogBuilder(MainActivity.this)
+                        .setTouchOutSideCancelable(true)
+                        .showCancelButton(true)
+                        .setTitle("这是一个普通样式的对话框")
+                        .setMessage("this is a normal CBDialog")
+                        .setConfirmButtonText("确定")
+                        .setCancelButtonText("取消")
+                        .setDialogAnimation(CBDialogBuilder.DIALOG_ANIM_SLID_BOTTOM)
+                        .create().show();
             }
         });
     }
