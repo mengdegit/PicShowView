@@ -2,6 +2,9 @@ package com.joker.picshowview.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Environment;
@@ -18,15 +21,28 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.blankj.utilcode.util.SPUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.felipecsl.gifimageview.library.GifImageView;
+import com.hitomi.tilibrary.style.index.NumberIndexIndicator;
+import com.hitomi.tilibrary.style.progress.ProgressBarIndicator;
+import com.hitomi.tilibrary.transfer.TransferConfig;
+import com.hitomi.tilibrary.transfer.Transferee;
+import com.hitomi.universalloader.UniversalImageLoader;
 import com.joker.picshowview.APP;
 import com.joker.picshowview.utils.ToastUtils;
+import com.joker.picshowview.view.activity.WebSocketActivity;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.socks.library.KLog;
 import com.weijuso.hardware.Keypad;
 import com.joker.picshowview.R;
 import com.joker.picshowview.entity.Student;
@@ -39,6 +55,9 @@ import com.joker.picshowview.utils.MainPresenter;
 import com.joker.picshowview.utils.TextUtils;
 import com.zhl.cbdialog.CBDialogBuilder;
 
+import junit.framework.Test;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -65,7 +84,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
     public TextView Longitude;
     public TextView Latitude;
     public View Banner;
-    public SimpleDraweeView SDV;
+    public ImageView SDV;
     public ConvenientBanner convenientBanner;
 
     private MainPresenter mPresenter;
@@ -76,6 +95,15 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
 //    private ArrayAdapter transformerArrayAdapter;
     public Button openControl;
     public Button closeControl;
+    public Button openControl1;
+    public Button closeControl1;
+    public GifImageView gifImageView;
+
+     List<String> sourceImageList = new ArrayList<>();
+    private DisplayImageOptions options;
+    protected Transferee transferee;
+    protected TransferConfig config;
+
 
     int i=3;
 
@@ -99,14 +127,17 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         setContentView(R.layout.activity_main);
         //继电器初始化
         ledControler = new Keypad();
+        KLog.i("开机自启","实现了开机自启");
 
         initLocation();
         initDao();
         initList();
         initUI();
         initClick();
+//        testConsuming();
         mPresenter = new MainPresenter(this);
 
+        testTranFeree();
 //        Banner = findViewById(R.id.banner);
         tv = (TextView) findViewById(R.id.test_github);
         tv.setText("测试Github提交第二次");
@@ -173,7 +204,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         //广告层操作
         bannerWork();
         //加载图片
-        SDV.setImageURI("192.168.18.55\\Users\\Administrator\\Desktop\\22.jpg");
+//        SDV.setImageURI("http://i1.17173cdn.com/2fhnvk/YWxqaGBf/cms3/mcofEgbkwpuvlob.jpg!a-3-640x.jpg");
 
         //位置信息
         Longitude.setOnClickListener(new View.OnClickListener() {
@@ -195,6 +226,67 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
 
     }
 
+    private void testConsuming() {
+        long sum = 0l;
+        for (int j = 0; j < 10; j++) {
+            long startTime = System.currentTimeMillis();
+            int s = 0;
+            for (int i = 0; i < 10000000; i++) {
+                s += i;
+                s -= (s - 1);
+            }
+            long endTime = System.currentTimeMillis();
+            sum += (endTime - startTime);
+            Log.i("性能耗时" + (j + 1), (endTime - startTime) + " ms");
+        }
+
+        Log.i("平均性能耗时", (sum * 1.0 / 10) + " ms");
+
+    }
+
+    private void testTranFeree() {
+        ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
+        ImageLoader.getInstance().displayImage("http://i1.17173cdn.com/2fhnvk/YWxqaGBf/cms3/mcofEgbkwpuvlob.jpg!a-3-640x.jpg",SDV,options);
+        transferee = Transferee.getDefault(this);
+        sourceImageList.add("http://i1.17173cdn.com/2fhnvk/YWxqaGBf/cms3/mcofEgbkwpuvlob.jpg!a-3-640x.jpg");
+        options = new DisplayImageOptions
+                .Builder()
+                .showImageOnLoading(R.mipmap.ic_empty_photo)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .resetViewBeforeLoading(true)
+                .build();
+
+        config = TransferConfig.build()
+                .setSourceImageList(sourceImageList)
+                .setMissPlaceHolder(R.mipmap.ic_empty_photo)
+                .setErrorPlaceHolder(R.mipmap.ic_empty_photo)
+                .setProgressIndicator(new ProgressBarIndicator())
+                .setIndexIndicator(new NumberIndexIndicator())
+                .setImageLoader(UniversalImageLoader.with(getApplicationContext()))
+                .setJustLoadHitImage(true)
+                .setOnLongClcikListener(new Transferee.OnTransfereeLongClickListener() {
+                    @Override
+                    public void onLongClick(ImageView imageView, int pos) {
+//                        saveImageByUniversal(imageView);
+                    }
+                })
+                .create();
+
+        SDV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<ImageView> list = new ArrayList<ImageView>();
+                list.add(SDV);
+                config.setNowThumbnailIndex(0);
+                config.setOriginImageList(list);
+                transferee.apply(config).show();
+            }
+        });
+
+    }
+
     private void initClick() {
         openControl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,6 +303,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
                         Log.i("ksd","未删除");
                     }
                 }
+                startActivity(new Intent(MainActivity.this, WebSocketActivity.class));
             }
         });
         closeControl.setOnClickListener(new View.OnClickListener() {
@@ -228,6 +321,21 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
                         .setCancelButtonText("取消")
                         .setDialogAnimation(CBDialogBuilder.DIALOG_ANIM_SLID_BOTTOM)
                         .create().show();
+            }
+        });
+
+        openControl1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SPUtils.getInstance("test").put("testclear","123456");
+            }
+        });
+        closeControl1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("testClear","之前"+SPUtils.getInstance("test").getString("testclear"));
+
+
             }
         });
     }
@@ -273,7 +381,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
 
     private void initUI() {
         convenientBanner = (ConvenientBanner) findViewById(R.id.convenientBanner);
-        SDV = (SimpleDraweeView) findViewById(R.id.simpledraweeview);
+        SDV = (ImageView) findViewById(R.id.simpledraweeview);
         loadTestDatas();
 
         Longitude = (TextView) findViewById(R.id.longitude);
@@ -281,6 +389,16 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
 
         openControl = (Button) findViewById(R.id.open);
         closeControl = (Button) findViewById(R.id.close);
+
+        openControl1 = (Button) findViewById(R.id.open1);
+        closeControl1 = (Button) findViewById(R.id.close1);
+
+        gifImageView = (GifImageView) findViewById(R.id.gifImageView);
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.mipmap.sample3);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        gifImageView.setImageResource(getResources().getIdentifier("simple3.gif", "mipmap-xhdpi" , this.getPackageName()));
+        gifImageView.startAnimation();
 
     }
 
@@ -341,7 +459,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
             }
 
             @Override
-            public void onProgress(int current) {
+            public void onProgress(int current,CountDownUtil util) {
                 Message message = mHandler.obtainMessage(1);
                 message.arg1 = current;
                 mHandler.sendMessage(message);

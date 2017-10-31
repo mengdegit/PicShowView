@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'com.neenbedankt.android-apt'
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.joker.picshowview"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -24,15 +25,30 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    //  load with universal-image-loader
+    compile group: 'com.nostra13.universalimageloader', name: 'universal-image-loader', version: '1.9.5'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'org.greenrobot:greendao:3.0.1'
     compile 'org.greenrobot:greendao-generator:3.0.0'
     compile 'com.bigkoo:convenientbanner:2.0.5'
     compile 'com.facebook.fresco:fresco:0.12.0'
-    testCompile 'junit:junit:4.12'
-
     compile 'com.github.yilylong:CBDialog:v1.0.3'
+    compile 'com.github.Hitomis.transferee:Transferee:v1.1.0'
+    compile 'com.github.Hitomis.transferee:UniversalLoader:v1.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:mockwebserver:3.4.1'
+    testCompile 'junit:junit:4.12'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.github.zhaokaiqiang.klog:library:0.0.1'
+    //StompProtocolAndroid 依赖于webSocket的标准实现
+    compile 'org.java-websocket:Java-WebSocket:1.3.0'
+    compile 'com.github.NaikSoftware:StompProtocolAndroid:1.1.1'
+    compile 'com.blankj:utilcode:1.6.3'
+    compile 'com.felipecsl:gifimageview:2.1.0'
+
 }
 greendao {
     schemaVersion 1000
