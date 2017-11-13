@@ -150,8 +150,9 @@
             android:layout_toRightOf="@+id/open1"
             android:layout_toEndOf="@+id/open1" />
 
-        <com.felipecsl.gifimageview.library.GifImageView
+        <pl.droidsonroids.gif.GifImageView
             android:id="@+id/gifImageView"
+            android:src="@mipmap/timg"
             android:layout_width="179dp"
             android:layout_height="169dp"
             android:layout_alignParentBottom="true"
@@ -160,5 +161,27 @@
             android:layout_gravity="center"
             android:scaleType="fitCenter" />
 
+        <Button
+            android:id="@+id/open_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="video"
+            android:layout_below="@+id/open1"
+            android:layout_toRightOf="@+id/circleView"
+            android:layout_toEndOf="@+id/circleView" />
+
+        <com.sunfusheng.marqueeview.MarqueeView
+            android:id="@+id/marqueeView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:mvAnimDuration="1000"
+            app:mvDirection="right_to_left"
+            app:mvInterval="3000"
+            app:mvSingleLine="true"
+            app:mvTextColor="@color/white"
+            app:mvTextSize="60sp" />
+
     </RelativeLayout>
+
 </FrameLayout>

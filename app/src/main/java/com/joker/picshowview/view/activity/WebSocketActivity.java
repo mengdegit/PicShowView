@@ -1,5 +1,6 @@
 package com.joker.picshowview.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -32,20 +33,42 @@ import okhttp3.ws.WebSocketListener;
 import okio.Buffer;
 
 public class WebSocketActivity extends AppCompatActivity {
+    //使用MockWebServer构造一个mock server对象，顺便new一个线程池，用于write线程回写消息。
     private final MockWebServer mockWebServer = new MockWebServer();
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     @BindView(R.id.webserver)
     Button webserver;
     @BindView(R.id.webclient)
     Button webclient;
-    private CountDownUtil countDownUtil=null;
+    @BindView(R.id.handler_timer)
+    Button handlerTimer;
+    @BindView(R.id.stop_handler)
+    Button stopHandler;
+    @BindView(R.id.restart_machine)
+    Button restartMachine;
+
+    private CountDownUtil countDownUtil = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_socket);
         ButterKnife.bind(this);
+        initClick();
 
+    }
+
+    private void initClick() {
+        restartMachine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Intent.ACTION_REBOOT);
+                intent.putExtra("nowait", 1);
+                intent.putExtra("interval", 1);
+                intent.putExtra("window", 0);
+                sendBroadcast(intent);
+            }
+        });
     }
 
     @OnClick(R.id.webserver)
@@ -57,7 +80,7 @@ public class WebSocketActivity extends AppCompatActivity {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 this.webSocket = webSocket;
-                KLog.i("WebSocketActivity","server onOpen");
+                KLog.i("WebSocketActivity", "server onOpen");
                 KLog.i("server request header:" + response.request().headers());
                 KLog.i("server response header:" + response.headers());
                 KLog.i("server response:" + response);
@@ -135,7 +158,7 @@ public class WebSocketActivity extends AppCompatActivity {
     @OnClick(R.id.webclient)
     public void getClient(View view) {
         SPUtils.getInstance("test").clear();
-        Log.i("testClear","之后"+ SPUtils.getInstance("test").getString("testclear"));
+        Log.i("testClear", "之后" + SPUtils.getInstance("test").getString("testclear"));
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -213,19 +236,20 @@ public class WebSocketActivity extends AppCompatActivity {
             }
         }).start();
     }
+
     @OnClick(R.id.handler_timer)
     public void handlerTimer(View view) {
-        mhandler.postDelayed(runnable,0);
-       countDownUtil= new CountDownUtil(30, new CountDownUtil.ICountDownListener() {
+        mhandler.postDelayed(runnable, 0);
+        countDownUtil = new CountDownUtil(30, new CountDownUtil.ICountDownListener() {
             @Override
             public void onDone() {
-                Log.i("testhandlerTimer","onDone");
+                Log.i("testhandlerTimer", "onDone");
             }
 
             @Override
             public void onProgress(int current, CountDownUtil util) {
-                Log.i("testhandlerTimer",current+"");
-                if (current==20){
+                Log.i("testhandlerTimer", current + "");
+                if (current == 20) {
                     util.stop();
                 }
             }
@@ -233,17 +257,19 @@ public class WebSocketActivity extends AppCompatActivity {
 //        countDownUtil.start();
 
     }
+
     @OnClick(R.id.stop_handler)
     public void stopHandler(View view) {
 //        countDownUtil.stop();
         mhandler.removeCallbacks(runnable);
     }
+
     Handler mhandler = new Handler();
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            Log.i("testhandlerTimer","testhandlerTimer");
-            mhandler.postDelayed(this,5000);
+            Log.i("testhandlerTimer", "testhandlerTimer");
+            mhandler.postDelayed(this, 5000);
         }
     };
 }

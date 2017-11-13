@@ -7,16 +7,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
 import android.support.v7.widget.ListPopupWindow;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,21 +32,12 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.blankj.utilcode.util.SPUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.felipecsl.gifimageview.library.GifImageView;
 import com.hitomi.tilibrary.style.index.NumberIndexIndicator;
 import com.hitomi.tilibrary.style.progress.ProgressBarIndicator;
 import com.hitomi.tilibrary.transfer.TransferConfig;
 import com.hitomi.tilibrary.transfer.Transferee;
 import com.hitomi.universalloader.UniversalImageLoader;
 import com.joker.picshowview.APP;
-import com.joker.picshowview.utils.ToastUtils;
-import com.joker.picshowview.view.activity.WebSocketActivity;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.socks.library.KLog;
-import com.weijuso.hardware.Keypad;
 import com.joker.picshowview.R;
 import com.joker.picshowview.entity.Student;
 import com.joker.picshowview.entity.User;
@@ -51,11 +45,19 @@ import com.joker.picshowview.gen.DaoSession;
 import com.joker.picshowview.gen.StudentDao;
 import com.joker.picshowview.gen.UserDao;
 import com.joker.picshowview.utils.CountDownUtil;
+import com.joker.picshowview.utils.JNIUtils;
 import com.joker.picshowview.utils.MainPresenter;
 import com.joker.picshowview.utils.TextUtils;
+import com.joker.picshowview.utils.ToastUtils;
+import com.joker.picshowview.view.activity.NiceVActivity;
+import com.joker.picshowview.view.activity.WebSocketActivity;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.socks.library.KLog;
+import com.sunfusheng.marqueeview.MarqueeView;
+import com.weijuso.hardware.Keypad;
 import com.zhl.cbdialog.CBDialogBuilder;
-
-import junit.framework.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -63,15 +65,20 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import pl.droidsonroids.gif.GifImageView;
 
 
-public class MainActivity extends Activity implements MainPresenter.IMainView ,OnItemClickListener{
+public class MainActivity extends Activity implements MainPresenter.IMainView, OnItemClickListener {
     //继电器
     public Keypad ledControler;
 
     public TextView tv;
     List<String> data;
     List<String> dbData;
+    @BindView(R.id.open_video)
+    Button openVideo;
     private ArrayList<Integer> localImages = new ArrayList<Integer>();
     private ArrayList<String> transformerList = new ArrayList<String>();
     private ListPopupWindow mListPop;
@@ -92,42 +99,42 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
     public LocationManager locationManager;
     private String locationProvider;
     public Location location;
-//    private ArrayAdapter transformerArrayAdapter;
+    //    private ArrayAdapter transformerArrayAdapter;
     public Button openControl;
     public Button closeControl;
     public Button openControl1;
     public Button closeControl1;
     public GifImageView gifImageView;
 
-     List<String> sourceImageList = new ArrayList<>();
+    List<String> sourceImageList = new ArrayList<>();
     private DisplayImageOptions options;
     protected Transferee transferee;
     protected TransferConfig config;
 
 
-    int i=3;
+    int i = 3;
 
-    Handler mHandler = new Handler(){
+    Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what ==1){
-                tv.setText(msg.arg1+"");
-            }else if (msg.what ==2){
+            if (msg.what == 1) {
+                tv.setText(msg.arg1 + "");
+            } else if (msg.what == 2) {
                 tv.setText("done");
             }
         }
     };
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         //继电器初始化
         ledControler = new Keypad();
-        KLog.i("开机自启","实现了开机自启");
+        KLog.i("开机自启", "实现了开机自启");
 
         initLocation();
         initDao();
@@ -140,7 +147,8 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         testTranFeree();
 //        Banner = findViewById(R.id.banner);
         tv = (TextView) findViewById(R.id.test_github);
-        tv.setText("测试Github提交第二次");
+        JNIUtils jniUtils = new JNIUtils();
+        tv.setText(jniUtils.getString());
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,8 +163,8 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
 
                 List<Student> students = studentDao.loadAll();
                 dbData.clear();
-                for (int i=0;i<students.size();i++){
-                    dbData.add(students.get(i).getId()+"");
+                for (int i = 0; i < students.size(); i++) {
+                    dbData.add(students.get(i).getId() + "");
                 }
                 mListPop.show();
 //                startCountDown();
@@ -210,16 +218,16 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         Longitude.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (location!=null){
-                    Longitude.setText(location.getLongitude()+"");
+                if (location != null) {
+                    Longitude.setText(location.getLongitude() + "");
                 }
             }
         });
         Latitude.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (location != null){
-                    Latitude.setText(location.getLatitude()+"");
+                if (location != null) {
+                    Latitude.setText(location.getLatitude() + "");
                 }
             }
         });
@@ -246,7 +254,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
 
     private void testTranFeree() {
         ImageLoader.getInstance().init(ImageLoaderConfiguration.createDefault(this));
-        ImageLoader.getInstance().displayImage("http://i1.17173cdn.com/2fhnvk/YWxqaGBf/cms3/mcofEgbkwpuvlob.jpg!a-3-640x.jpg",SDV,options);
+        ImageLoader.getInstance().displayImage("http://i1.17173cdn.com/2fhnvk/YWxqaGBf/cms3/mcofEgbkwpuvlob.jpg!a-3-640x.jpg", SDV, options);
         transferee = Transferee.getDefault(this);
         sourceImageList.add("http://i1.17173cdn.com/2fhnvk/YWxqaGBf/cms3/mcofEgbkwpuvlob.jpg!a-3-640x.jpg");
         options = new DisplayImageOptions
@@ -292,15 +300,15 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
             @Override
             public void onClick(View v) {
 //                ledControler.ledsetting(0,1);
-                ToastUtils.showToast(MainActivity.this,"打开toast",Toast.LENGTH_LONG);
+                ToastUtils.showToast(MainActivity.this, "打开toast", Toast.LENGTH_LONG);
                 //测试图片删除
-                File file = new File(Environment.getExternalStorageDirectory(),"hpFace.apk");
-                if (file.exists()){
+                File file = new File(Environment.getExternalStorageDirectory(), "hpFace.apk");
+                if (file.exists()) {
                     boolean f = file.delete();
-                    if (f){
-                        Log.i("ksd","已删除");
-                    }else {
-                        Log.i("ksd","未删除");
+                    if (f) {
+                        Log.i("ksd", "已删除");
+                    } else {
+                        Log.i("ksd", "未删除");
                     }
                 }
                 startActivity(new Intent(MainActivity.this, WebSocketActivity.class));
@@ -327,15 +335,58 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         openControl1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SPUtils.getInstance("test").put("testclear","123456");
+                SPUtils.getInstance("test").put("testclear", "123456");
+                /*
+                AnimationSet相当于一个动画的集合，true表示使用Animation的interpolator
+                false则是使用自己的。
+                Interpolator 被用来修饰动画效果，定义动画的变化率，可以使存在的动画效果
+                accelerated(加速)，decelerated(减速),repeated(重复),bounced(弹跳)等。
+             */
+
+                AnimationSet animationSet = new AnimationSet(true);
+            /*
+                参数解释：
+                    第一个参数：X轴水平缩放起始位置的大小（fromX）。1代表正常大小
+                    第二个参数：X轴水平缩放完了之后（toX）的大小，0代表完全消失了
+                    第三个参数：Y轴垂直缩放起始时的大小（fromY）
+                    第四个参数：Y轴垂直缩放结束后的大小（toY）
+                    第五个参数：pivotXType为动画在X轴相对于物件位置类型
+                    第六个参数：pivotXValue为动画相对于物件的X坐标的开始位置
+                    第七个参数：pivotXType为动画在Y轴相对于物件位置类型
+                    第八个参数：pivotYValue为动画相对于物件的Y坐标的开始位置
+
+                   （第五个参数，第六个参数），（第七个参数,第八个参数）是用来指定缩放的中心点
+                    0.5f代表从中心缩放
+             */
+                ScaleAnimation scaleAnimation = new ScaleAnimation(1,1,1,0,
+                        Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0);
+                //3秒完成动画
+                scaleAnimation.setDuration(1000);
+                ScaleAnimation scaleAnimation2 = new ScaleAnimation(1,1,0,1,
+                        Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0);
+                //3秒完成动画
+                scaleAnimation2.setDuration(1000);
+                //将AlphaAnimation这个已经设置好的动画添加到 AnimationSet中
+                animationSet.addAnimation(scaleAnimation);
+//                animationSet.addAnimation(scaleAnimation2);
+                //启动动画
+                gifImageView.startAnimation(animationSet);
+                gifImageView.setVisibility(View.GONE);
             }
         });
         closeControl1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("testClear","之前"+SPUtils.getInstance("test").getString("testclear"));
+                Log.i("testClear", "之前" + SPUtils.getInstance("test").getString("testclear"));
+                gifImageView.clearAnimation();
 
+            }
+        });
 
+        openVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,NiceVActivity.class));
             }
         });
     }
@@ -345,15 +396,13 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //获取所有可用的位置提供器
         List<String> providers = locationManager.getProviders(true);
-        if (providers.contains(LocationManager.GPS_PROVIDER)){
+        if (providers.contains(LocationManager.GPS_PROVIDER)) {
             locationProvider = LocationManager.GPS_PROVIDER;
-        }else if (providers.contains(LocationManager.NETWORK_PROVIDER)){
+        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
             locationProvider = LocationManager.NETWORK_PROVIDER;
 
 
-
-
-        }else {
+        } else {
             Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -369,7 +418,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
             public LocalImageHolderView createHolder() {
                 return new LocalImageHolderView();
             }
-        },localImages)
+        }, localImages)
                 //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
                 .setPageIndicator(new int[]{R.mipmap.ic_page_indicator, R.mipmap.ic_page_indicator_focused})
                 //设置指示器的方向
@@ -394,11 +443,15 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         closeControl1 = (Button) findViewById(R.id.close1);
 
         gifImageView = (GifImageView) findViewById(R.id.gifImageView);
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(),R.mipmap.sample3);
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.mipmap.sample3);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        gifImageView.setImageResource(getResources().getIdentifier("simple3.gif", "mipmap-xhdpi" , this.getPackageName()));
-        gifImageView.startAnimation();
+
+        MarqueeView marqueeView = (MarqueeView) findViewById(R.id.marqueeView);
+        String notice = "心中有阳光，脚底有力量！心中有阳光，脚底有力量！心中有阳光，脚底有力量！String notice = \"心中有阳光，脚底有力量！心中有阳光，脚底有力量！心中有阳光，脚底有力量！\";\n" +
+                "marqueeView.startWithText(notice);";
+        marqueeView.startWithText(notice);
+
 
     }
 
@@ -445,9 +498,9 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
 
 
     private void initDao() {
-        DaoSession daoSession = ((APP)getApplication()).getDaoSession();
+        DaoSession daoSession = ((APP) getApplication()).getDaoSession();
         userDao = daoSession.getUserDao();
-        studentDao =daoSession.getStudentDao();
+        studentDao = daoSession.getStudentDao();
     }
 
     private void startCountDown() {
@@ -459,7 +512,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
             }
 
             @Override
-            public void onProgress(int current,CountDownUtil util) {
+            public void onProgress(int current, CountDownUtil util) {
                 Message message = mHandler.obtainMessage(1);
                 message.arg1 = current;
                 mHandler.sendMessage(message);
@@ -467,9 +520,9 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
         }).start();
     }
 
-    public void showPop(){
+    public void showPop() {
         mListPop = new ListPopupWindow(this);
-        mListPop.setAdapter(new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,dbData));
+        mListPop.setAdapter(new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, dbData));
         mListPop.setWidth(500);
         mListPop.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         mListPop.setAnchorView(tv);
@@ -497,21 +550,21 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
 
     @Override
     public void showTipsView() {
-        Log.i("visibility",convenientBanner.getVisibility()+"之前");
+        Log.i("visibility", convenientBanner.getVisibility() + "之前");
         convenientBanner.setVisibility(View.VISIBLE);
-        Log.i("visibility",convenientBanner.getVisibility()+"之后");
+        Log.i("visibility", convenientBanner.getVisibility() + "之后");
 //        Banner.setVisibility(View.VISIBLE);
 //        Intent intent = new Intent(MainActivity.this,AdvertisementActivity.class);
 //        startActivity(intent);
     }
 
-    public void showLocation(Location location){
+    public void showLocation(Location location) {
 
     }
 
     @Override
     protected void onDestroy() {
-        Log.i("destory","xiaohui");
+        Log.i("destory", "xiaohui");
         super.onDestroy();
     }
 
@@ -542,7 +595,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView ,O
 
     @Override
     public void onItemClick(int position) {
-        if (convenientBanner.getVisibility() == View.VISIBLE){
+        if (convenientBanner.getVisibility() == View.VISIBLE) {
             convenientBanner.setVisibility(View.GONE);
             mPresenter.resetTipsTimer();
         }
