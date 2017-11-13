@@ -76,6 +76,13 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="测试github" />
+        <TextView
+            android:id="@+id/list_activity"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="功能列表" />
 
         <com.joker.picshowview.custom.CircleView
             android:id="@+id/circleView"

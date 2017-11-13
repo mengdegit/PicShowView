@@ -49,6 +49,7 @@ import com.joker.picshowview.utils.JNIUtils;
 import com.joker.picshowview.utils.MainPresenter;
 import com.joker.picshowview.utils.TextUtils;
 import com.joker.picshowview.utils.ToastUtils;
+import com.joker.picshowview.view.activity.ListProActivity;
 import com.joker.picshowview.view.activity.NiceVActivity;
 import com.joker.picshowview.view.activity.WebSocketActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -72,13 +73,15 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends Activity implements MainPresenter.IMainView, OnItemClickListener {
     //继电器
-    public Keypad ledControler;
+//    public Keypad ledControler;
 
     public TextView tv;
     List<String> data;
     List<String> dbData;
     @BindView(R.id.open_video)
     Button openVideo;
+    @BindView(R.id.list_activity)
+    TextView listActivity;
     private ArrayList<Integer> localImages = new ArrayList<Integer>();
     private ArrayList<String> transformerList = new ArrayList<String>();
     private ListPopupWindow mListPop;
@@ -133,7 +136,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView, O
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         //继电器初始化
-        ledControler = new Keypad();
+//        ledControler = new Keypad();
         KLog.i("开机自启", "实现了开机自启");
 
         initLocation();
@@ -296,6 +299,12 @@ public class MainActivity extends Activity implements MainPresenter.IMainView, O
     }
 
     private void initClick() {
+        listActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ListProActivity.class));
+            }
+        });
         openControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -358,12 +367,12 @@ public class MainActivity extends Activity implements MainPresenter.IMainView, O
                    （第五个参数，第六个参数），（第七个参数,第八个参数）是用来指定缩放的中心点
                     0.5f代表从中心缩放
              */
-                ScaleAnimation scaleAnimation = new ScaleAnimation(1,1,1,0,
-                        Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0);
+                ScaleAnimation scaleAnimation = new ScaleAnimation(1, 1, 1, 0,
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0);
                 //3秒完成动画
                 scaleAnimation.setDuration(1000);
-                ScaleAnimation scaleAnimation2 = new ScaleAnimation(1,1,0,1,
-                        Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0);
+                ScaleAnimation scaleAnimation2 = new ScaleAnimation(1, 1, 0, 1,
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0);
                 //3秒完成动画
                 scaleAnimation2.setDuration(1000);
                 //将AlphaAnimation这个已经设置好的动画添加到 AnimationSet中
@@ -386,7 +395,7 @@ public class MainActivity extends Activity implements MainPresenter.IMainView, O
         openVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,NiceVActivity.class));
+                startActivity(new Intent(MainActivity.this, NiceVActivity.class));
             }
         });
     }
