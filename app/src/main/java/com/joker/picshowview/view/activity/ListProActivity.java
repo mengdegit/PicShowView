@@ -15,6 +15,8 @@ public class ListProActivity extends AppCompatActivity {
 
     @BindView(R.id.animationText)
     Button animationText;
+    @BindView(R.id.iFlytek_test)
+    Button iFlytekTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +30,13 @@ public class ListProActivity extends AppCompatActivity {
         animationText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ListProActivity.this,AnimationActivity.class));
+                startActivity(new Intent(ListProActivity.this, AnimationActivity.class));
+            }
+        });
+        iFlytekTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ListProActivity.this, iFlytekActivity.class));
             }
         });
     }

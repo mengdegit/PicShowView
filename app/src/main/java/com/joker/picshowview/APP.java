@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.blankj.utilcode.util.Utils;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 import com.joker.picshowview.gen.DaoMaster;
 import com.joker.picshowview.gen.DaoSession;
 
@@ -30,6 +32,7 @@ public class APP extends Application{
         Fresco.initialize(this);
 
         Utils.init(this);
+        SpeechUtility.createUtility(this, SpeechConstant.APPID+"=5a1246ff");
     }
 
     public DaoSession getDaoSession(){

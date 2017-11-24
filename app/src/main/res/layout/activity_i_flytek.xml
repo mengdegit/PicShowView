@@ -5,15 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.joker.picshowview.view.activity.ListProActivity">
+    tools:context="com.joker.picshowview.view.activity.iFlytekActivity">
     <Button
-        android:id="@+id/animationText"
-        android:text="动画测试"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/iFlytek_test"
-        android:text="动画测试"
+        android:id="@+id/read_text"
+        android:text="readText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
