@@ -17,6 +17,10 @@ public class ListProActivity extends AppCompatActivity {
     Button animationText;
     @BindView(R.id.iFlytek_test)
     Button iFlytekTest;
+    @BindView(R.id.navigation)
+    Button navigation;
+    @BindView(R.id.my_toast)
+    Button myToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,18 @@ public class ListProActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ListProActivity.this, iFlytekActivity.class));
+            }
+        });
+        navigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ListProActivity.this, NavigationActivity.class));
+            }
+        });
+        myToast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ListProActivity.this, ToastActivity.class));
             }
         });
     }

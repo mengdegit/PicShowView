@@ -66,7 +66,12 @@
         <activity android:name=".view.activity.NiceVActivity" />
         <activity android:name=".view.activity.AnimationActivity" />
         <activity android:name=".view.activity.ListProActivity" />
-        <activity android:name=".view.activity.iFlytekActivity"></activity>
+        <activity android:name=".view.activity.iFlytekActivity" />
+        <activity
+            android:name=".view.activity.NavigationActivity"
+            android:label="@string/title_activity_navigation"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".view.activity.ToastActivity"></activity>
     </application>
 
 </manifest>

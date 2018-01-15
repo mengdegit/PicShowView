@@ -21,4 +21,19 @@
         <item name="android:textCursorDrawable">@null</item>
         <item name="android:textSize">20sp</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- 自定义的Toast动画 -->
+    <style name="Lite.Animation.Toast" parent="@android:style/Animation.Toast">
+        <item name="android:windowEnterAnimation">@anim/lite_toast_enter</item>
+        <item name="android:windowExitAnimation">@anim/lite_toast_exit</item>
+    </style>
 </resources>
