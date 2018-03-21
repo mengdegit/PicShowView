@@ -2,6 +2,7 @@ package com.joker.picshowview;
 
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.multidex.MultiDexApplication;
 
 import com.blankj.utilcode.util.Utils;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -16,7 +17,7 @@ import org.greenrobot.greendao.database.Database;
  * Created by aa on 2017/7/31.
  */
 
-public class APP extends Application{
+public class APP extends MultiDexApplication{
     public static final boolean ENCRYPTED = true;
     private DaoMaster.DevOpenHelper mHelper;
     private SQLiteDatabase db;

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.joker.picshowview.view.activity.AnimationActivity">
@@ -12,4 +13,23 @@
         android:text="interpolatorButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/hide_textview"
+        android:text="hidetextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/interpolator"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_centerInParent="true"
+        android:textColor="@color/blue_btn_bg_color"
+        android:id="@+id/broke_animation"
+        android:textSize="60sp"
+        android:padding="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="粒子破碎效果" />
 </RelativeLayout>

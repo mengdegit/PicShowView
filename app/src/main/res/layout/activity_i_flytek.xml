@@ -6,10 +6,18 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.joker.picshowview.view.activity.iFlytekActivity">
+
     <Button
         android:id="@+id/read_text"
-        android:text="readText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="readText" />
+
+    <Button
+        android:id="@+id/read_cache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="readText" />
+
 
 </LinearLayout>

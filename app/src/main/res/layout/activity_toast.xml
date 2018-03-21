@@ -4,11 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.joker.picshowview.view.activity.ToastActivity">
     <Button
         android:id="@+id/my_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="自定义样式"/>
+    <Button
+        android:id="@+id/automatic_toast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="第一个"/>
+    <Button
+        android:id="@+id/automatic_toast2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自动覆盖上一个"/>
 
 </LinearLayout>

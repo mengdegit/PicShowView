@@ -23,6 +23,8 @@ import java.lang.reflect.Field;
 public class ToastUtils {
 
     private static Toast mToast;
+    private static Toast mToastView;
+
     public static void showToast(Context context, int resId, int duration){
         showToast(context, context.getString(resId), duration);
     }
@@ -39,6 +41,24 @@ public class ToastUtils {
         if (mToast!=null){
             mToast.cancel();
         }
+    }
+
+    /**
+     * 显示
+     */
+    public static void ToastShow(Context context, int drawable, String str) {
+        View view = LayoutInflater.from(context).inflate(R.layout.toast_cancel, null);
+        TextView text = (TextView) view.findViewById(R.id.textToast);
+        ImageView imageView = (ImageView) view.findViewById(R.id.imgToast);
+        text.setText(str); // 设置显示文字
+        imageView.setImageResource(drawable);
+        if (mToastView ==null){
+            mToastView = new Toast(context);
+        }
+        mToastView.setGravity(Gravity.CENTER, 0, 0); // Toast显示的位置
+        mToastView.setDuration(Toast.LENGTH_SHORT); // Toast显示的时间
+        mToastView.setView(view);
+        mToastView.show();
     }
 
     public static void show(Activity context, String message){
