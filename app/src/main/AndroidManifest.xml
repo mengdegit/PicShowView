@@ -71,7 +71,11 @@
             android:name=".view.activity.NavigationActivity"
             android:label="@string/title_activity_navigation"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".view.activity.ToastActivity"></activity>
+        <activity android:name=".view.activity.ToastActivity" />
+        <activity android:name=".view.activity.AndserverActivity"></activity>
+
+        <service android:name=".server.CoreService"
+            android:exported="false"/>
     </application>
 
 </manifest>

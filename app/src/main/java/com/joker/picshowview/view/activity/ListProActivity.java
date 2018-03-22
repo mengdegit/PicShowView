@@ -10,6 +10,7 @@ import com.joker.picshowview.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ListProActivity extends AppCompatActivity {
 
@@ -21,6 +22,8 @@ public class ListProActivity extends AppCompatActivity {
     Button navigation;
     @BindView(R.id.my_toast)
     Button myToast;
+    @BindView(R.id.my_andserver)
+    Button myAndserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,5 +58,9 @@ public class ListProActivity extends AppCompatActivity {
                 startActivity(new Intent(ListProActivity.this, ToastActivity.class));
             }
         });
+    }
+    @OnClick(R.id.my_andserver)
+    public void startAndserverActivity(View view){
+        startActivity(new Intent(ListProActivity.this,AndserverActivity.class));
     }
 }

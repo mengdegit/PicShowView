@@ -26,5 +26,10 @@
         android:text="自定义toast"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/my_andserver"
+        android:text="局域网微服务andserver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
