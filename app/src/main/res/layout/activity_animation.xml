@@ -6,7 +6,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.joker.picshowview.view.activity.AnimationActivity">
-
+    <!--<com.joker.picshowview.view.CarouselCustomerSpeedTextView-->
+        <!--android:id="@+id/tv_carousel_customer_two"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:text="著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"-->
+        <!--android:singleLine="true"-->
+        <!--android:ellipsize="marquee" />-->
+    <!--<HorizontalScrollView-->
+        <!--android:id="@+id/wai"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+        <!--<com.joker.picshowview.view.MarqueeView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:id="@+id/tv_carousel_customer_two" />-->
+    <!--</HorizontalScrollView>-->
     <Button
         android:id="@+id/interpolator"
         android:layout_margin="5dp"
@@ -22,6 +38,23 @@
         android:layout_below="@+id/interpolator"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+    <Button
+        android:id="@+id/shutdown"
+        android:text="hidetextview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hide_textview"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <EditText
+        android:id="@+id/focusable_view"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/hide_textview"
+        android:focusableInTouchMode="true"
+        android:windowSoftInputMode="stateHidden|adjustResize"
+        android:focusable="true"/>
+
 
     <TextView
         android:layout_centerInParent="true"

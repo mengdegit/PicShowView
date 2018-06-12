@@ -21,5 +21,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="自动覆盖上一个"/>
+    <Button
+        android:id="@+id/launcher_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="打开辅助app"/>
 
 </LinearLayout>

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.joker.picshowview"
-    android:installLocation="internalOnly">
+    android:installLocation="internalOnly"
+    android:sharedUserId="android.uid.system"
+    >
 
+    <uses-permission android:name="android.permission.SHUTDOWN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

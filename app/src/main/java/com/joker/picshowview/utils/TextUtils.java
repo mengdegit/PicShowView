@@ -1,6 +1,10 @@
 package com.joker.picshowview.utils;
 
+import android.content.Context;
 import android.os.Environment;
+import android.text.TextPaint;
+
+import com.joker.picshowview.APP;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -55,5 +59,12 @@ public class TextUtils {
             return "";
 
         }
+    }
+
+    public static float getTextWidth(String text, int textSize){
+        TextPaint paint = new TextPaint();
+        float scaledDensity = APP.getContext().getResources().getDisplayMetrics().scaledDensity;
+        paint.setTextSize(scaledDensity * textSize);
+        return paint.measureText(text);
     }
 }

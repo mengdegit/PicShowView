@@ -1,6 +1,7 @@
 package com.joker.picshowview;
 
 import android.app.Application;
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.multidex.MultiDexApplication;
 
@@ -23,9 +24,11 @@ public class APP extends MultiDexApplication{
     private SQLiteDatabase db;
     private DaoMaster mDaoMaster;
     private DaoSession mDaoSession;
+    public static Context context;
     @Override
     public void onCreate() {
         super.onCreate();
+        this.context =this;
         mHelper = new DaoMaster.DevOpenHelper(this,"notes-db");
         db = mHelper.getWritableDatabase();
         mDaoMaster = new DaoMaster(db);
@@ -34,6 +37,9 @@ public class APP extends MultiDexApplication{
 
         Utils.init(this);
         SpeechUtility.createUtility(this, SpeechConstant.APPID+"=5a1246ff");
+    }
+    public static Context getContext(){
+        return context;
     }
 
     public DaoSession getDaoSession(){

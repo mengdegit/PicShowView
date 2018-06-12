@@ -1,6 +1,9 @@
 package com.joker.picshowview.view.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,10 +39,14 @@ public class NiceVActivity extends Activity {
         reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                videoPlayer.setLooping(false);
-                videoPlayer.release();
-                videoPlayer.setUp(lists,true,0);
-                videoPlayer.startPlayLogic();
+//                videoPlayer.setLooping(false);
+//                videoPlayer.release();
+//                videoPlayer.setUp(lists,true,0);
+//                videoPlayer.startPlayLogic();
+                Intent intent = new Intent();
+                intent.setType("video/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -176,5 +183,34 @@ public class NiceVActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         videoPlayer.release();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode ==1){
+            if(resultCode==RESULT_OK){
+                Uri uri = data.getData();
+                Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+                cursor.moveToFirst();
+                String number= cursor.getString(0); // 视频编号
+                String path = cursor.getString(1); // 视频文件路径
+                String size = cursor.getString(2); // 视频大小
+                String name = cursor.getString(3); // 视频文件名
+                Log.e("-----","number="+number);
+                Log.e("-----","v_path="+path);
+                Log.e("-----","v_size="+size);
+                Log.e("-----","v_name="+name);
+
+                lists.clear();
+
+                videoPlayer.setLooping(false);
+                videoPlayer.release();
+                videoPlayer.setUp(lists,true,0);
+                videoPlayer.startPlayLogic();
+
+            }
+        }
+
     }
 }
